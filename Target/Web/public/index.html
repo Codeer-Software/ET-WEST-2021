@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"
+    integrity="sha256-uVEHWRIr846/vAdLJeybWxjPNStREzOlqLMXjW/Saeo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.1"></script>
+  <script src="https://cdn.socket.io/4.0.2/socket.io.min.js"
+    integrity="sha384-Bkt72xz1toXkj/oEiOgkQwWKbvNYxTNWMqdon3ejP6gwq53zSo48nW5xACmeDV0F"
+    crossorigin="anonymous"></script>
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+  <app-root class="vh-100">
+    <app-menu class="vh-100 py-2 shadow-sm">
+      <h1>LOGO</h1>
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">モニタ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/history.html">記録</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/sample.html">サンプル</a>
+        </li>
+      </ul>
+    </app-menu>
+    <div class="mh-100 container" style="width: auto; flex-grow: 1; overflow-y: auto;">
+      <graph-container>
+        <canvas id="myChart" width="1200" height="600"></canvas>
+        <graph-selection></graph-selection>
+      </graph-container>
+      <div class="text-end">
+        <div class="form-check form-switch ms-auto d-inline-block">
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" id="pause">
+            一時停止
+          </label>
+        </div>
+      </div>
+      <textarea readonly class="form-control mt-2" id="selected-values" rows="5"></textarea>
+      <div class="d-flex justify-content-end mt-2">
+        <div class="input-group" style="width: 400px;">
+          <span class="input-group-text">名前</span>
+          <input class="form-control" id="input-log-name">
+        </div>
+        <button class="btn btn-primary ms-2" id="button-save">記録</button>
+      </div>
+      <div class="text-end mt-2">
+        <button class="btn btn-outline-secondary" id="button-clear">解除</button>
+      </div>
+    </div>
+    </div>
+  </app-root>
+  <script>
+    function getLabels() {
+      const now = new Date();
+      const nowSeconds = now.getTime();
+      const latestDate = new Date(now);
+      now.setSeconds(0);
+      now.setMilliseconds(0);
+      const ret = [new Date(now)];
+      while (true) {
+        now.setMinutes(now.getMinutes() - 1);
+        // だいたい5秒間隔で送信してて、100エントリぐらい表示したいので500秒分だけ表示する
+        if (nowSeconds - 500000 > now.getTime()) {
+          break;
+        }
+        ret.push(new Date(now));
+      }
+      return ret;
+    }
+    const data = [];
+    const canvas = document.getElementById('myChart');
+    const ctx = canvas.getContext('2d');
+    const plugin = {
+      id: 'custom_canvas_background_color',
+      beforeDraw: (chart) => {
+        const ctx = chart.canvas.getContext('2d');
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.fillStyle = 'white';
+        ctx.fillRect(chart.chartArea.left, chart.chartArea.top, chart.chartArea.width, chart.chartArea.height);
+        ctx.restore();
+      }
+    };
+    const myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: getLabels(),
+        datasets: [{
+          label: '明るさ(lux)',
+          data,
+          backgroundColor: ['rgba(255, 99, 132, 0.2)'],
+          borderColor: ['rgba(255, 99, 132, 1)'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          },
+          x: {
+            type: 'time',
+            time: { unit: 'second', stepSize: 60, round: false },
+            ticks: { source: 'labels' }
+          }
+        },
+      },
+      plugins: [plugin],
+    });
+
+    let pointerPosition;
+    let isPaused = false;
+    let selectionStart = 0;
+    let currentSelection = [];
+    function setPaused(checked) {
+      document.getElementById('pause').checked = checked;
+    }
+    function getPaused() {
+      return document.getElementById('pause').checked;
+    }
+    function setSelection(start, end) {
+      // Visualを更新
+      const area = myChart.chartArea;
+      const range = document.getElementsByTagName("graph-selection")[0];
+      const left = getPixelForValue(start);
+      range.style.top = area.top + "px";
+      range.style.bottom = (myChart.height - area.bottom) + "px";
+      range.style.left = left + "px";
+      range.style.width = (getPixelForValue(end) - left) + "px";
+      // currentSelectionを更新
+      currentSelection = data.filter(a => {
+        return start <= a.x && a.x <= end;
+      });
+      const selectedValues = document.getElementById("selected-values");
+      selectedValues.value = currentSelection
+        .map(a => `[${a.x.toLocaleString()}] ${a.y}`)
+        .join("\n");
+      // イベント発行
+      const e = new CustomEvent("x-selection", {
+        detail: { start, end }
+      });
+      canvas.dispatchEvent(e);
+    }
+    function clearSelection() {
+      const range = document.getElementsByTagName("graph-selection")[0];
+      range.style.width = "0";
+      const selectedValues = document.getElementById("selected-values");
+      selectedValues.value = "";
+    }
+    function limits(value, min, max) {
+      return Math.min(Math.max(min, value), max);
+    }
+    function getValueForPixel(pixel) {
+      return myChart.scales.x.getValueForPixel(pixel);
+    }
+    function getPixelForValue(value) {
+      const area = myChart.chartArea;
+      return limits(myChart.scales.x.getPixelForValue(value), area.left, area.right);
+    }
+    canvas.addEventListener('pointerdown', (e) => {
+      setPaused(true);
+      canvas.setPointerCapture(e.pointerId);
+      selectionStart = getValueForPixel(e.offsetX);
+      clearSelection();
+    })
+    canvas.addEventListener('pointermove', (e) => {
+      if (!(e.buttons & 1)) return;
+      const current = getValueForPixel(e.offsetX);
+      setSelection(Math.min(selectionStart, current), Math.max(selectionStart, current));
+    });
+    document.getElementById('pause').addEventListener('change', () => {
+      if (!getPaused() && socket) {
+        socket.emit('history');
+      }
+      clearSelection();
+    });
+    document.getElementById("button-save").addEventListener('click', () => {
+      const input = document.getElementById("input-log-name");
+      if (!input.value) return;
+      const now = Date.now();
+      localStorage.setItem(now.toString(), JSON.stringify({
+        timestamp: now,
+        name: input.value,
+        data: currentSelection
+      }));
+      input.value = "";
+      clearSelection();
+    });
+    document.getElementById("button-clear").addEventListener('click', () => {
+      const input = document.getElementById("input-log-name");
+      input.value = "";
+      clearSelection();
+    });
+    const socket = io();
+    socket.on('connect', () => {
+      socket.emit('init', "");
+    });
+    socket.on('history', (history) => {
+      while (data.length) data.pop();
+      data.push(...(history.map(a => ({ ...a, x: new Date(a.x) }))));
+      while (data[0].x < new Date(Date.now() - 500000)) {
+        data.shift();
+      }
+      myChart.data.labels = getLabels();
+      myChart.update();
+    });
+    socket.on('data', ({ lux: { x, y } }) => {
+      if (getPaused()) return true;
+      data.push({ x: new Date(x), y });
+      while (data[0].x < new Date(Date.now() - 500000)) {
+        data.shift();
+      }
+      myChart.data.labels = getLabels();
+      myChart.update();
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
