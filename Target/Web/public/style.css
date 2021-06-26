@@ -1,0 +1,40 @@
+body {
+  height: 100vh;
+  background: var(--bs-light);
+}
+
+graph-selection {
+  display: block;
+  position: absolute;
+  top: 0px;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  pointer-events: none;
+  background: rgba(192, 192, 255, 0.7);
+}
+
+graph-container {
+  display: block;
+  position: relative;
+}
+
+selected-values {
+  display: block;
+}
+
+app-root {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  margin-right: 24px;
+  margin-left: 24px;
+}
+
+app-menu {
+  display: block;
+  width: 240px;
+  background: #eceff1;
+  margin-left: -24px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
