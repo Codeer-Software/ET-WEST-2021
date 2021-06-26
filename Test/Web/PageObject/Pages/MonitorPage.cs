@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using PageObject.Controls;
 using Selenium.StandardControls;
 using Selenium.StandardControls.PageObjectUtility;
 using Selenium.StandardControls.TestAssistant.GeneratorToolKit;
@@ -7,7 +8,7 @@ namespace PageObject.Pages
 {
     public class MonitorPage : PageBase
     {
-        public IWebElement Chart => ById("myChart").Wait().Find();
+        public ChartDriver Chart => ById("myChart").Wait();
         public CheckBoxDriver Pause => ById("pause").Wait();
         public TextAreaDriver SelectedValues => ById("selected-values").Wait();
         public TextBoxDriver Name => ById("input-log-name").Wait();
