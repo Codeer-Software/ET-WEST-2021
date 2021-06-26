@@ -12,7 +12,8 @@ namespace PageObject.Controls
 
         public void Select(DateTime start, DateTime end)
         {
-            //TODO JS使ったり、SeleniumのAction使ったり
+            JS.ExecuteScript("setPaused(true); setSelection(new Date(arguments[0]), new Date(arguments[1]));",
+                start.ToString("O"), end.ToString("O"));
         }
 
         public void Edit(string text)
@@ -23,41 +24,23 @@ namespace PageObject.Controls
         [CaptureCodeGenerator]
         public string GetWebElementCaptureGenerator()
         {
-            //TODO キャプチャ時にコード生成するJS
-            //以下は完全にダミー
-            var guid = Guid.NewGuid();
             return $@"
+    element.addEventListener(""x-selection"", e => {{
+        const {{ start, end }} = e.detail;
+        const generated = __codeerTestAssistantPro.getCode();
+        const usings = __codeerTestAssistantPro.getUsings();
+        const tail = generated.length - 1;
+        const value = `.Select(DateTime.Parse(${{new Date(start).toISOString()}}), DateTime.Parse(${{new Date(end).toISOString()}}));`;
+        const name = __codeerTestAssistantPro.getElementName(element);
 
-    if (!window.__GeneratorDictionary) {{
-        window.__GeneratorDictionary = {{}};
-    }}
-
-    //クリックはイベントで検知
-    element.addEventListener('click', function() {{ 
-        var name = __codeerTestAssistantPro.getElementName(this);
-        __codeerTestAssistantPro.pushCode(name + '.Click();');
-    }}, false);
-
-
-    //これでポーリング登録できる
-    __codeerTestAssistantPro.addPolling(() => {{
-        
-        //なんか見張ってて変化があったら的な感じ
-        let oldValue = window.__GeneratorDictionary['{guid}'];
-        let value = element.innerText;
-        if (oldValue === undefined) {{
-            oldValue = value;
+        if(tail >= 0 && generated[tail].startsWith(name + '.Select(')){{
+            generated.pop();
         }}
-
-
-        if (oldValue != value) {{
-            //ここに生成するコードを登録する
-            const name = __codeerTestAssistantPro.getElementName(element);
-            __codeerTestAssistantPro.pushCode(name + '.SendKeys(""' + value + '"");');
-        }}
-
-        window.__GeneratorDictionary['{guid}'] = value;
-        }});
+        __codeerTestAssistantPro.clearCodeAndUsing();
+        for(const using of usings) {{ __codeerTestAssistantPro.pushUsings(usings); }}
+        for(const code of generated) {{ __codeerTestAssistantPro.pushCode(code); }}
+        __codeerTestAssistantPro.pushCode(name + value);
+    }});
 ".Trim();
         }
 
