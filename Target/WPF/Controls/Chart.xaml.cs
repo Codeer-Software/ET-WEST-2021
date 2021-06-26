@@ -104,6 +104,15 @@ namespace etwest.Controls
             graph.InvalidateVisual();
         }
 
+        public void Select(DateTime start, DateTime end)
+        {
+            var startPixels = graph.GetPixelForValue(start);
+            var endPixels = graph.GetPixelForValue(end);
+            selection.Width = Math.Abs(startPixels - endPixels);
+            ((TranslateTransform)selection.RenderTransform).X = Math.Min(startPixels, endPixels);
+            SelectionChanged?.Invoke(this, new SelectionChangedEventArgs { Start = Min(start, end), End = Max(start, end) });
+        }
+
         #region Private Utilities
 
         private DateTime Max(DateTime d1, DateTime d2)
