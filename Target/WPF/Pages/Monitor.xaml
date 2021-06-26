@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="etwest.Pages.Monitor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:etwest.Pages"
+             xmlns:controls="clr-namespace:etwest.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <controls:Chart SelectionChanged="OnSelectionChanged" IsPaused="{Binding ElementName=pause,Path=IsChecked}" x:Name="chart"/>
+        <CheckBox Style="{DynamicResource CheckBoxStyle1}" Grid.Row="1" HorizontalAlignment="Right" Content="一時停止" Margin="0,5" x:Name="pause"/>
+        <Grid Grid.Row="2">
+            <TextBox IsReadOnly="True" AcceptsReturn="True" Margin="0,5" VerticalScrollBarVisibility="Visible" Height="100" Background="#FFE6E6E6" x:Name="TextBox"/>
+        </Grid>
+        <Grid Grid.Row="3" Margin="0,0,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="名前" />
+            <TextBox Grid.Column="1" Margin="5,0,5,0" x:Name="logName"/>
+            <Button Grid.Column="2" Content="記録" HorizontalAlignment="Right" Click="OnSaveClick"/>
+        </Grid>
+        <Button Grid.Row="4" HorizontalAlignment="Right" Content="解除" Click="OnClick"/>
+    </Grid>
+</UserControl>
