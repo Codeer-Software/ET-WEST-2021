@@ -48,6 +48,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChartDriverGenerator.cs" />
+    <Compile Include="EventAdapter.cs" />
+    <Compile Include="GenerateUtility.cs" />
     <Compile Include="WindowAnalysisMenuAction.cs" />
     <Compile Include="NamingRule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

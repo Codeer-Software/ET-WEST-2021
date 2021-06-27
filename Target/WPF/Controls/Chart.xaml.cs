@@ -76,6 +76,11 @@ namespace etwest.Controls
         {
             if (e.LeftButton != MouseButtonState.Pressed) return;
             _end = graph.GetValueForPixel(e.GetPosition(this).X);
+            UpdateSelection();
+        }
+
+        void UpdateSelection()
+        { 
             var startPixels = graph.GetPixelForValue(_start);
             var endPixels = graph.GetPixelForValue(_end);
             selection.Width = Math.Abs(startPixels - endPixels);
