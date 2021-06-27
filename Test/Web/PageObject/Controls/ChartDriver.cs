@@ -27,18 +27,21 @@ namespace PageObject.Controls
             return $@"
     element.addEventListener(""x-selection"", e => {{
         const {{ start, end }} = e.detail;
+        const name = __codeerTestAssistantPro.getElementName(element);
+
+        //このイベントは大量に呼ばれるので重複したコードを削除する
         const generated = __codeerTestAssistantPro.getCode();
         const usings = __codeerTestAssistantPro.getUsings();
         const tail = generated.length - 1;
-        const value = `.Select(DateTime.Parse(${{new Date(start).toISOString()}}), DateTime.Parse(${{new Date(end).toISOString()}}));`;
-        const name = __codeerTestAssistantPro.getElementName(element);
-
         if(tail >= 0 && generated[tail].startsWith(name + '.Select(')){{
             generated.pop();
         }}
         __codeerTestAssistantPro.clearCodeAndUsing();
         for(const using of usings) {{ __codeerTestAssistantPro.pushUsings(usings); }}
         for(const code of generated) {{ __codeerTestAssistantPro.pushCode(code); }}
+
+        //コード追加
+        const value = `.Select(DateTime.Parse(""${{new Date(start).toISOString()}}""), DateTime.Parse(""${{new Date(end).toISOString()}}""));`;
         __codeerTestAssistantPro.pushCode(name + value);
     }});
 ".Trim();
