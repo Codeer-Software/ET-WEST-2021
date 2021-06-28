@@ -15,7 +15,9 @@
             <TabItem Header="Log">
                 <pages:History />
             </TabItem>
-            <TabItem Header="Sample"/>
+            <TabItem Header="Sample">
+                <pages:Sample />
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

@@ -7,6 +7,211 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Canvas>
+                <TextBox x:Name="textBox" Canvas.Left="17" Canvas.Top="3" Height="19" Width="107"></TextBox>
+                <ComboBox x:Name="comboBox" Canvas.Left="17" Canvas.Top="27" Width="107">
+                    <ComboBoxItem>1</ComboBoxItem>
+                    <ComboBoxItem>2</ComboBoxItem>
+                    <ComboBoxItem>3</ComboBoxItem>
+                </ComboBox>
+                <CheckBox x:Name="check1" Canvas.Left="24" Canvas.Top="63">Check1</CheckBox>
+                <CheckBox x:Name="check2" Canvas.Left="24" Canvas.Top="83">Check2</CheckBox>
+                <CheckBox x:Name="check3" Canvas.Left="24" Canvas.Top="103">Check3</CheckBox>
+
+                <RadioButton x:Name="radio1" Canvas.Left="27" Canvas.Top="125">Radio1</RadioButton>
+                <RadioButton x:Name="radio2" Canvas.Left="27" Canvas.Top="146">Radio2</RadioButton>
+                <RadioButton x:Name="radio3" Canvas.Left="27" Canvas.Top="166">Radio3</RadioButton>
+
+                <ListBox x:Name="listBox" Canvas.Left="157" Canvas.Top="7" Width="107">
+                    <ListBoxItem>1</ListBoxItem>
+                    <ListBoxItem>2</ListBoxItem>
+                    <ListBoxItem>3</ListBoxItem>
+                </ListBox>
+                <DatePicker Canvas.Left="157" Canvas.Top="94"></DatePicker>
+
+
+            </Canvas>
+
+
+
+
+            <Grid Grid.Row="1">
+                <DataGrid x:Name="dataGrid" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="NAME" Binding="{Binding Name}" />
+                        <DataGridCheckBoxColumn Header="MEMBER" Binding="{Binding AuthMember}" >
+                        </DataGridCheckBoxColumn>
+                        <DataGridComboBoxColumn Header="GENDER" 
+                        SelectedValueBinding="{Binding Gender}"
+                        DisplayMemberPath="Label" 
+                        SelectedValuePath="Value">
+                            <DataGridComboBoxColumn.ItemsSource>
+                                <x:Array Type="{x:Type local:GenderComboBoxItem}">
+                                    <local:GenderComboBoxItem Label="None" Value="None" />
+                                    <local:GenderComboBoxItem Label="Men" Value="Men" />
+                                    <local:GenderComboBoxItem Label="Women" Value="Women" />
+                                </x:Array>
+                            </DataGridComboBoxColumn.ItemsSource>
+                        </DataGridComboBoxColumn>
+                        <DataGridHyperlinkColumn Header="LINK" Binding="{Binding Link}"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.HeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border x:Name="BackgroundBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.ColumnSpan="2"/>
+                                                    <Path x:Name="SortArrow" Grid.Column="1" Fill="{DynamicResource MahApps.Brushes.Gray2}" Height="10" Margin="0,0,8,2" RenderTransformOrigin="0.5,0.5" Stretch="Fill" Visibility="Collapsed" VerticalAlignment="Center" Width="8"/>
+                                                    <Thumb x:Name="PART_LeftHeaderGripper" Background="Transparent" HorizontalAlignment="Left">
+                                                        <Thumb.Style>
+                                                            <Style TargetType="{x:Type Thumb}">
+                                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                                                                <Setter Property="Cursor" Value="SizeWE"/>
+                                                                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="{x:Type Thumb}">
+                                                                            <Border BorderBrush="{TemplateBinding Background}" BorderThickness="0,0,1,0" Background="Transparent" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                                <Setter Property="Width" Value="8"/>
+                                                            </Style>
+                                                        </Thumb.Style>
+                                                    </Thumb>
+                                                    <Thumb x:Name="PART_RightHeaderGripper" Grid.Column="1" HorizontalAlignment="Right">
+                                                        <Thumb.Style>
+                                                            <Style TargetType="{x:Type Thumb}">
+                                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                                                                <Setter Property="Cursor" Value="SizeWE"/>
+                                                                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="{x:Type Thumb}">
+                                                                            <Border BorderBrush="{TemplateBinding Background}" BorderThickness="0,0,1,0" Background="Transparent" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                                <Setter Property="Width" Value="8"/>
+                                                            </Style>
+                                                        </Thumb.Style>
+                                                    </Thumb>
+                                                </Grid>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="SortDirection" Value="Ascending">
+                                                        <Setter Property="Data" TargetName="SortArrow" Value="F1M34,57L42,57 42,32.25 52,42.25 52,31.75 38,17.75 24,31.75 24,42.25 34,32.25 34,57z"/>
+                                                        <Setter Property="Visibility" TargetName="SortArrow" Value="Visible"/>
+                                                    </Trigger>
+                                                    <Trigger Property="SortDirection" Value="Descending">
+                                                        <Setter Property="Data" TargetName="SortArrow" Value="F1M42,19.0002L34,19.0002 34,43.7502 24,33.7502 24,44.2502 38,58.2502 52,44.2502 52,33.7502 42,43.7502 42,19.0002z"/>
+                                                        <Setter Property="Margin" TargetName="SortArrow" Value="0,0,8,0"/>
+                                                        <Setter Property="Visibility" TargetName="SortArrow" Value="Visible"/>
+                                                    </Trigger>
+                                                    <Trigger Property="DisplayIndex" Value="0">
+                                                        <Setter Property="Visibility" TargetName="PART_LeftHeaderGripper" Value="Collapsed"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DataGridTemplateColumn.HeaderStyle>
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="4">
+                                        <TextBlock Text="NAME" HorizontalAlignment="Center" FontWeight="Bold" />
+                                        <Separator Height="2" BorderBrush="Black" Margin="0" />
+                                        <TextBlock Text="MEMBER" HorizontalAlignment="Center" FontWeight="Bold" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" />
+                                        <Separator />
+                                        <CheckBox IsEnabled="False" IsChecked="{Binding AuthMember}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBox Text="{Binding Name}" />
+                                        <Separator />
+                                        <CheckBox IsChecked="{Binding AuthMember}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+            </Grid>
+
+
+
+        </Grid>
+
+        <ListView x:Name="_listView" Grid.Column="1" Margin="8" BorderThickness="1">
+            <ListView.ItemTemplateSelector>
+                <local:ListViewDataTemplateSelector>
+                    <local:ListViewDataTemplateSelector.DataTemplate1>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding CheckBoxData}" Content="CheckBox"  Margin="8,0" Width="100"/>
+                                <ComboBox SelectedIndex="{Binding ComboBoxData}" Margin="8,0" Width="100">
+                                    <ComboBoxItem Content="0"/>
+                                    <ComboBoxItem Content="1"/>
+                                    <ComboBoxItem Content="2"/>
+                                    <ComboBoxItem Content="3"/>
+                                    <ComboBoxItem Content="4"/>
+                                </ComboBox>
+                                <TextBox Text="{Binding TextData}" Margin="8,0" Width="100" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </local:ListViewDataTemplateSelector.DataTemplate1>
+                    <local:ListViewDataTemplateSelector.DataTemplate2>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox SelectedIndex="{Binding ComboBoxData}" Margin="8,0" Width="100">
+                                    <ComboBoxItem Content="0"/>
+                                    <ComboBoxItem Content="1"/>
+                                    <ComboBoxItem Content="2"/>
+                                    <ComboBoxItem Content="3"/>
+                                    <ComboBoxItem Content="4"/>
+                                </ComboBox>
+                                <TextBox Text="{Binding TextData}" Margin="8,0" Width="100" />
+                                <DatePicker SelectedDate="{Binding DateData}" Margin="8,0" Width="100"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </local:ListViewDataTemplateSelector.DataTemplate2>
+                    <local:ListViewDataTemplateSelector.DataTemplate3>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="{Binding TextData}" Margin="8,0" Width="100" />
+                                <DatePicker SelectedDate="{Binding DateData}" Margin="8,0" Width="100"/>
+                                <Slider Value="{Binding SliderData}" Margin="8,0" Width="100"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </local:ListViewDataTemplateSelector.DataTemplate3>
+                </local:ListViewDataTemplateSelector>
+            </ListView.ItemTemplateSelector>
+        </ListView>
     </Grid>
 </UserControl>
