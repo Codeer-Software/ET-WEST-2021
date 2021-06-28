@@ -58,6 +58,10 @@ namespace etwest.Models
                 .Subscribe(value =>
                 {
                     Data.Add(value);
+                    while (Data.Count > 0 && Data[0].DateTime < (DateTime.Now - TimeSpan.FromSeconds(500)))
+                    {
+                        Data.RemoveAt(0);
+                    }
                 });
             client.OpenAsync(new Uri(App.EndPoint));
         }
