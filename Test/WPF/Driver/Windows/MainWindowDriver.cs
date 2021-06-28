@@ -12,8 +12,9 @@ namespace Driver.Windows
     public class MainWindowDriver
     {
         public WindowControl Core { get; }
-        public WPFTabControl TabControl => Core.LogicalTree().ByType("System.Windows.Controls.TabControl").Single().Dynamic(); 
-        public MonitorDriver Monitor => Core.LogicalTree().ByType("etwest.Pages.Monitor").FirstOrDefault()?.Dynamic(); 
+        public WPFTabControl TabControl => Core.LogicalTree().ByType("System.Windows.Controls.TabControl").Single().Dynamic();
+        public MonitorDriver Monitor => Core.LogicalTree().ByType("etwest.Pages.Monitor").FirstOrDefault()?.Dynamic();
+        public SampleDriver SampleDriver => Core.LogicalTree().ByType("etwest.Pages.Sample").FirstOrDefault()?.Dynamic();
 
         public MainWindowDriver(WindowControl core)
         {

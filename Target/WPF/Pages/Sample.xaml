@@ -37,12 +37,7 @@
                     <ListBoxItem>3</ListBoxItem>
                 </ListBox>
                 <DatePicker Canvas.Left="157" Canvas.Top="94"></DatePicker>
-
-
             </Canvas>
-
-
-
 
             <Grid Grid.Row="1">
                 <DataGrid x:Name="dataGrid" AutoGenerateColumns="False">
@@ -76,6 +71,7 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <Border x:Name="BackgroundBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.ColumnSpan="2"/>
+                                                    <ContentControl x:Name="HeaderContent" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
                                                     <Path x:Name="SortArrow" Grid.Column="1" Fill="{DynamicResource MahApps.Brushes.Gray2}" Height="10" Margin="0,0,8,2" RenderTransformOrigin="0.5,0.5" Stretch="Fill" Visibility="Collapsed" VerticalAlignment="Center" Width="8"/>
                                                     <Thumb x:Name="PART_LeftHeaderGripper" Background="Transparent" HorizontalAlignment="Left">
                                                         <Thumb.Style>

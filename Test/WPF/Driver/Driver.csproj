@@ -102,6 +102,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\ChartDriver.cs" />
+    <Compile Include="Windows\CustomDataGridCellDriver.cs" />
+    <Compile Include="Windows\HistoryDriver.cs" />
     <Compile Include="Windows\MainWindowDriver.cs" />
     <Compile Include="Windows\MonitorDriver.cs" />
     <Compile Include="Windows\Native\FolderDialogDriver.cs" />
@@ -114,6 +116,11 @@
     <Compile Include="TestController\ProcessController.cs" />
     <Compile Include="TestController\TimeoutController.cs" />
     <Compile Include="TestController\TimeoutExAttribute.cs" />
+    <Compile Include="Windows\SampleDriver.cs" />
+    <Compile Include="Windows\SampleListViewItem1Driver.cs" />
+    <Compile Include="Windows\SampleListViewItem2Driver.cs" />
+    <Compile Include="Windows\SampleListViewItem3Driver.cs" />
+    <Compile Include="Windows\SampleListViewItemBaseDriver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
