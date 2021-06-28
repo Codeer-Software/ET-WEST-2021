@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using PageObject.Controls;
 using Selenium.StandardControls;
 using Selenium.StandardControls.PageObjectUtility;
 using Selenium.StandardControls.TestAssistant.GeneratorToolKit;
@@ -20,6 +21,8 @@ namespace PageObject.Pages
         public ButtonDriver inputJS => ById("inputJS").Wait();
         public AnchorDriver codeer => ById("codeer").Wait();
         public SideBar SideBar => ByTagName("app-menu").Wait();
+        public ItemsControlDriver<TableItem> sampleTable => ByCssSelector("#sample-table tbody").Wait();
+
 
         public SamplePage(IWebDriver driver) : base(driver) { }
     }
