@@ -22,6 +22,8 @@ namespace PageObject.Pages
         public AnchorDriver codeer => ById("codeer").Wait();
         public SideBar SideBar => ByTagName("app-menu").Wait();
         public ItemsControlDriver<TableItem> sampleTable => ByCssSelector("#sample-table tbody").Wait();
+        public TextBoxDriver inputX => ById("inputArea").ByTagName("input").Wait();
+        public ButtonDriver buttonX => ById("inputArea").ByTagName("button").Wait();
 
 
         public SamplePage(IWebDriver driver) : base(driver) { }
