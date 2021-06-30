@@ -31,9 +31,13 @@ namespace etwest.Models
                     var data = new List<Data>();
                     foreach (var v in value.Data[0].EnumerateArray())
                     {
-                        var x = v.GetProperty("x").GetString();
-                        var y = v.GetProperty("y").GetDouble();
-                        data.Add(new Data {DateTime = DateTime.Parse(x), Lux = y});
+                        try
+                        {
+                            var x = v.GetProperty("x").GetString();
+                            var y = v.GetProperty("y").GetDouble();
+                            data.Add(new Data { DateTime = DateTime.Parse(x), Lux = y });
+                        }
+                        catch { }
                     }
 
                     return data;
