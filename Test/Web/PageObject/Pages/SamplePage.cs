@@ -21,7 +21,7 @@ namespace PageObject.Pages
         public ButtonDriver inputJS => ById("inputJS").Wait();
         public AnchorDriver codeer => ById("codeer").Wait();
         public SideBar SideBar => ByTagName("app-menu").Wait();
-        public ItemsControlDriver<TableItem> sampleTable => ByCssSelector("#sample-table tbody").Wait();
+        public ItemsControlDriver<TableItem> sampleTable => ByTagName("form").ByXPath("table[2]").ByTagName("tbody").Wait();
         public TextBoxDriver inputX => ById("inputArea").ByTagName("input").Wait();
         public ButtonDriver buttonX => ById("inputArea").ByTagName("button").Wait();
 
